@@ -28,7 +28,7 @@ disqus:
 # Build settings
 permalink: /:title
 markdown: kramdown
-theme: minima
+theme: jekyll-theme-midnight
 gems:
   - jekyll-feed
   - jemoji
