@@ -28,17 +28,12 @@ paginate_path: /page:num/
 analytics: UA-83979019-1
 
 # Comments
-disqus-shortname: webjeda-demo
+disqus-shortname: simarpreetsingharora-github-io
 
 #social
 facebook: http://facebook.com/simararora
 twitter: http://twitter.com/@simar07101993
 github: http://github.com/simarpreetsingharora
-
-#facebook like box
-fb-app-id: 549480635219583
-fb-page-url: https://www.facebook.com/simararora/
-fb-page-title: webjeda
 
 # Sass style
 sass:
