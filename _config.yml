@@ -22,9 +22,8 @@ url: "" # the base hostname & protocol for your site
 github_username:  simarpreetsingharora
 author: simararora
 
-google_analytics: UA-61647345-1
 disqus:
-    shortname: Sinar
+    shortname: simararora7
 
 # Build settings
 permalink: /:title
