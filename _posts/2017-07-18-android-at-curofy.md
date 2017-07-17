@@ -69,7 +69,7 @@ For example, it isn't trivial to send a request to a database over network and a
 
 This is a case where RxJava (ReactiveX) excels - orchestrating multiple actions that happen due to certain events in the system.
 
-##### After putting all the above pieces in place, we came up with an architecture that is best described by the following image.
+After putting all the above pieces in place, we came up with an architecture that is best described by the following image.
 
 ![Clean Archetecture Evolution](../images/clean_architecture_evolution.png)
 
@@ -78,7 +78,7 @@ This is a case where RxJava (ReactiveX) excels - orchestrating multiple actions 
 - The **Model** is only the gateway to the domain layer or business logic.
 - The **Interactor** deals with I/O and is the provider of data to be displayed in the View.
 
-##### Let’s enumerate a bunch of benefits we get out of this RxJava based approach:
+Let’s enumerate a bunch of benefits we get out of this RxJava based approach:
 
 - Decoupling between Observables and Subscribers: makes maintainability and testing easier.
 - Simplified asynchronous tasks: java threads and futures are complex to manipulate and synchronise if more than one single level of asynchronous execution is required, so by using schedulers we can jump between background and main thread in an easy way (with no extra effort), especially when we need to update the UI. We also avoid what we call a “callback hell”, which makes our code unreadable and hard to follow up.
