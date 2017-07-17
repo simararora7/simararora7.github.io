@@ -92,8 +92,8 @@ It’s not enough to write code well, the code has to be kept clean over time. T
 
 If we all checked-in our code a little cleaner than when we checked it out, the code simply could not rot. The cleanup doesn’t have to be something big. Change one variable name for the better, break up one function that’s a little too large, eliminate one small bit of duplication, clean up one composite if statement.
 
-## Peer Reviews
-Peer reviews made sure that each line of code got a second set of eyes. This ensured that the code that had a tendency to break never got shipped. 
+## Code Reviews
+Code reviews made sure that each line of code got a second set of eyes. This ensured that the code that had a tendency to break never got shipped. 
 
 ## Conclusion
 Our way of building a scalable app might not be “correct” and you might not agree with this post. After all, not all martial artists agree about the best martial art, or the best technique within one ;)
