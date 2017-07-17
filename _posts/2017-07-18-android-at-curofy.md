@@ -1,0 +1,105 @@
+---
+title:	"Android @Curofy"
+date:	2017-07-18
+img:   CleanArchitecture.jpg
+---
+
+This post is based on the fragile premise that clean code matters. But we all know that clean code matters as we’ve had to deal for so long with its lack.
+
+A year back, like every naive Android developer working in a startup, we tried to “hack” real world problems to “disrupt the market” and to make an “impact”. Without a care in the world about good software design or architecture, we wrote code to build an Android app that would one day become one of the biggest medical apps in the country.
+
+Sprint after sprint, hack after hack, features were built in a mad rush. Create, Break, Iterate. Time flew by, we were building at a rate of a couple features a week. 
+
+By this time, the app had stopped being trivial. Features that would take hours when we started now took days, sometimes weeks. Every Activity was 1000+ lines of spaghetti code as Android inherently doesn’t worry too much about the separation of concerns. **The total cost of owning a mess had significantly slowed us down.**
+
+##The Android Conundrum
+The code looked ugly and wasn’t readable at all. Activities were responsible for managing everything.
+
+- Threading
+- I/O
+- Computation
+- Layouts
+- Config Changes
+- Basically everything was done in an activity
+
+After all activities are controllers. Right? Or are the views? We didn’t know anymore.
+
+As a result we had a ton of memory leaks. We had 96% crash free sessions at that time. Almost 70% of these crashes were OOM.
+
+##Architecting Android...The clean way
+
+We needed to design the app in a way such that changing a line of code somewhere did not break something somewhere else. The app had to be, as Uncle Bob says, **“robust but not rigid, flexible but not fragile”**.
+
+We knew we had to get the basics right the first time. So we read a lot. By a lot, I mean a hell lot.
+
+Some of the usefule reads are:
+
+- [Android Architecture Blueprints](https://github.com/googlesamples/android-architecture)
+- [Architecting Android…The clean way?](http://www.fernandocejas.com/2014/09/03/architecting-android-the-clean-way/)
+- [Architecting Android…The evolution](http://www.fernandocejas.com/2015/07/18/architecting-android-the-evolution/)
+- [Tasting Dagger 2 on Android](http://www.fernandocejas.com/2015/04/11/tasting-dagger-2-on-android/)
+- [Clean Architecture…Dynamic Parameters in Use Cases](http://www.fernandocejas.com/2016/12/24/clean-architecture-dynamic-parameters-in-use-cases/)
+
+After doing a lot of research, we decided to go with **Clean Archetecture by Uncle Bob**.
+
+![Clean Archetecture](../images/CleanArchitecture.jpg)
+
+Clean Architecture produces a system that is:
+
+- Independent of Frameworks
+- Testable
+- Independent of UI
+- Independent of Database
+- Independent of any external agency
+
+##The Dependency Rule
+
+The concentric circles represent different areas of software. In general, the further in you go, the higher level the software becomes. The outer circles are mechanisms. The inner circles are policies.
+
+The overriding rule that makes this architecture work is The Dependency Rule. This rule says that source code dependencies can only point inwards. Nothing in an inner circle can know anything at all about something in an outer circle. In particular, the name of something declared in an outer circle must not be mentioned by the code in an inner circle. That includes, functions, classes. variables, or any other named software entity.
+
+By the same token, data formats used in an outer circle should not be used by an inner circle, especially if those formats are generate by a framework in an outer circle. We don’t want anything in an outer circle to impact the inner circles.
+
+##RxJava
+
+In most Android applications, you are reacting to user interactions (clicks, swipes and etc.) while doing something else in the background (networking).
+Orchestrating all of this is a hard thing and could quickly turn into an unmanageable code mess.
+
+For example, it isn't trivial to send a request to a database over network and after it completes start fetching user messages and preferences at the same time, and after all of that is complete show a welcome message.
+
+This is a case where RxJava (ReactiveX) excels - orchestrating multiple actions that happen due to certain events in the system.
+
+#####After putting all the above pieces in place, we came up with an architecture that is best described by the following image.
+
+![Clean Archetecture Evolution](../images/clean_architecture_evolution.png)
+
+- The **View**, usually implemented by a Fragment/Activity, contains a reference to the presenter. The only thing that the view will do is to call a method from the Presenter every time there is an interface action.
+- The **Presenter** is responsible to act as the middle man between View and Model. It retrieves data from the Model and returns it formatted to the View. But unlike the typical MVC, it also decides what happens when you interact with the View.
+- The **Model** is only the gateway to the domain layer or business logic.
+- The **Interactor** deals with I/O and is the provider of data to be displayed in the View.
+
+#####Let’s enumerate a bunch of benefits we get out of this RxJava based approach:
+
+- Decoupling between Observables and Subscribers: makes maintainability and testing easier.
+- Simplified asynchronous tasks: java threads and futures are complex to manipulate and synchronise if more than one single level of asynchronous execution is required, so by using schedulers we can jump between background and main thread in an easy way (with no extra effort), especially when we need to update the UI. We also avoid what we call a “callback hell”, which makes our code unreadable and hard to follow up.
+- Data transformation/composition: we can combine multiple Observables<T> without affecting the client, which makes our solution more scalable.
+- Error handling: a signal is emitted to the consumer when an error has occurred within any Observable<T>.
+
+From my point of view there is one drawback, and indeed a price to pay, which has to do with the learning curve for developers who are not familiar with the concept. However, you get very valuable stuff out of it. **Reactive for the win!**
+
+##Leave the campground cleaner than you found it
+It’s not enough to write code well, the code has to be kept clean over time. The fact of life is that software has a tendency for entropy. We’ve all seen code rot and degrade over time so we borrowed the simple boy scouts rule: **“Leave the campground cleaner than you found it.”**
+
+If we all checked-in our code a little cleaner than when we checked it out, the code simply could not rot. The cleanup doesn’t have to be something big. Change one variable name for the better, break up one function that’s a little too large, eliminate one small bit of duplication, clean up one composite if statement.
+
+##Peer Reviews
+Peer reviews made sure that each line of code got a second set of eyes. This ensured that the code that had a tendency to break never got shipped. 
+
+##Conclusion
+Our way of building a scalable app might not be “correct” and you might not agree with this post. After all, not all martial artists agree about the best martial art, or the best technique within one ;)
+
+There are many different approaches towards MVP and a lot of interesting solutions to adapt it to Android. The one fact that we can’t deny is that Clean Code matters and you just can’t sweep it under a rug.
+
+This post borrows heavily from **Uncle Bob’s Clean Code**
+
+
